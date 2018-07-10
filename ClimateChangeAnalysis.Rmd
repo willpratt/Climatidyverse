@@ -1,0 +1,87 @@
+---
+title: "Climate Change Data Exploration Tidyverse"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Obtaining the Data
+We have to specify the column types, as by default readr will believe 'Per Capita' to be an integer when infact it needs to be a double. 
+
+```{r}
+climate<-read_csv("https://pkgstore.datahub.io/core/co2-fossil-by-nation/fossil-fuel-co2-emissions-by-nation_csv/data/0f04181960a0a896ebaf6d8afb0b71a6/fossil-fuel-co2-emissions-by-nation_csv.csv",
+                  col_types = cols(
+                    Year = col_integer(),
+                    Country = col_character(),
+                    Total = col_integer(),
+                    `Solid Fuel` = col_integer(),
+                    `Liquid Fuel` = col_integer(),
+                    `Gas Fuel` = col_integer(),
+                    Cement = col_integer(),
+                    `Gas Flaring` = col_integer(),
+                    `Per Capita` = col_double(),
+                    `Bunker fuels (Not in Total)` = col_integer())
+)
+```
+
+# Inspecting the top pollutors, per year and all time.
+Some basic aggregation validates the received wisdom that the US has historically been the biggest contributor to global warming, but that China is now a bigger issue.
+```{r}
+
+climate %>% top_n(20, Total) %>% arrange(desc(Total))
+
+top10alltime <- climate %>% 
+         group_by(Country) %>%
+         summarise(total = sum(Total)) %>%
+         arrange(desc(total)) %>% 
+         top_n(10)
+
+top10alltime
+
+```
+
+```{r, fig.width=12}
+climate %>% 
+  filter(Country %in% top10alltime$Country) %>%
+  filter(Year>2000) %>%
+  ggplot(aes(x=Year, y =Total)) +
+    geom_line() +
+    theme(legend.position="none") +
+    facet_grid(. ~ Country) +
+    ggtitle("Total co2 Emissions of Largest 10 Polluters" , subtitle = "2000-2014")
+```
+
+# Trends in co2 emmissions origin - big picture
+```{r}
+climate %>% 
+  gather(key=fueltype, Emissions, `Solid Fuel`:`Gas Flaring`) %>% 
+  ggplot(aes(x=Year, y=Emissions, color = fueltype)) + geom_bar(stat="identity")
+
+```
+
+# Visualising recent changes - total
+```{r, fig.height=13, fig.width=5}
+climate %>% 
+    filter(Year>2000) %>%
+    gather(key=fueltype, Emissions, `Solid Fuel`:`Gas Flaring`) %>% 
+    group_by(fueltype, Year) %>%
+    summarise(emissions = sum(Emissions)) %>%
+    ggplot(aes(x=Year, y=emissions, fill = fueltype)) + geom_bar(stat="identity") + facet_grid(fueltype ~ ., scales = "free_y")
+
+```
+
+# Specific Changes by Emission Source of the largest pollutors.
+We let the y axis scale per emission source, worth keeping an eye on the overall scale.
+```{r, fig.width=10}
+climate %>% 
+    filter(Year>2000) %>%
+    filter(Country %in% top10alltime$Country) %>%
+    gather(key=fueltype, Emissions, `Solid Fuel`:`Gas Flaring`) %>% 
+    ggplot(aes(x=Year, y=Emissions, fill = fueltype)) +
+        geom_bar(stat="identity") + 
+        facet_grid(fueltype ~ Country, scales = "free_y", labeller = label_wrap_gen(10)) +
+        theme(legend.position = "none", axis.text.x = element_text(angle = 90))
+```
