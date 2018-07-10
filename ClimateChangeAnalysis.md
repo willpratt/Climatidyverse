@@ -28,34 +28,31 @@ Inspecting the top pollutors, per year and all time.
 Some basic aggregation validates the received wisdom that the US has historically been the biggest contributor to global warming, but that China is now a bigger issue.
 
 ``` r
-climate %>% top_n(20, Total) %>% arrange(desc(Total))
+knitr::kable(climate %>% top_n(20, Total) %>% arrange(desc(Total)))
 ```
 
-    ## # A tibble: 20 x 10
-    ##     Year Country        Total `Solid Fuel` `Liquid Fuel` `Gas Fuel` Cement
-    ##    <int> <chr>          <int>        <int>         <int>      <int>  <int>
-    ##  1  2014 CHINA (MAINL… 2.81e6      2026492        344725      96504 338912
-    ##  2  2013 CHINA (MAINL… 2.80e6      2045156        336960      87371 327896
-    ##  3  2012 CHINA (MAINL… 2.73e6      2037338        321155      75764 300560
-    ##  4  2011 CHINA (MAINL… 2.65e6      1995029        306730      67137 285464
-    ##  5  2010 CHINA (MAINL… 2.39e6      1792793        298191      54472 247792
-    ##  6  2009 CHINA (MAINL… 2.18e6      1645333        268108      44870 223584
-    ##  7  2008 CHINA (MAINL… 2.06e6      1563721        264770      40850 190400
-    ##  8  2007 CHINA (MAINL… 1.92e6      1443751        253098      35348 185119
-    ##  9  2006 CHINA (MAINL… 1.78e6      1338803        245233      28317 168201
-    ## 10  2005 CHINA (MAINL… 1.61e6      1207530        232034      23187 145364
-    ## 11  2005 UNITED STATE… 1.58e6       579104        667143     317152  13723
-    ## 12  2007 UNITED STATE… 1.58e6       575692        648278     339433  13172
-    ## 13  2004 UNITED STATE… 1.57e6       573935        662168     318710  13466
-    ## 14  2006 UNITED STATE… 1.55e6       571099        653101     313999  13561
-    ## 15  2000 UNITED STATE… 1.55e6       564757        632129     342282  12173
-    ## 16  2003 UNITED STATE… 1.55e6       560926        648067     324514  12829
-    ## 17  2002 UNITED STATE… 1.54e6       561866        628411     334252  12412
-    ## 18  2008 UNITED STATE… 1.53e6       566810        611445     338359  11915
-    ## 19  2001 UNITED STATE… 1.53e6       555810        634801     321651  12301
-    ## 20  1999 UNITED STATE… 1.50e6       541784        618335     327459  11938
-    ## # ... with 3 more variables: `Gas Flaring` <int>, `Per Capita` <dbl>,
-    ## #   `Bunker fuels (Not in Total)` <int>
+|  Year| Country                  |    Total|  Solid Fuel|  Liquid Fuel|  Gas Fuel|  Cement|  Gas Flaring|  Per Capita|  Bunker fuels (Not in Total)|
+|-----:|:-------------------------|--------:|-----------:|------------:|---------:|-------:|------------:|-----------:|----------------------------:|
+|  2014| CHINA (MAINLAND)         |  2806634|     2026492|       344725|     96504|  338912|            0|        2.05|                        12066|
+|  2013| CHINA (MAINLAND)         |  2797384|     2045156|       336960|     87371|  327896|            0|        2.05|                        12057|
+|  2012| CHINA (MAINLAND)         |  2734817|     2037338|       321155|     75764|  300560|            0|        2.02|                        12701|
+|  2011| CHINA (MAINLAND)         |  2654360|     1995029|       306730|     67137|  285464|            0|        1.97|                        12636|
+|  2010| CHINA (MAINLAND)         |  2393248|     1792793|       298191|     54472|  247792|            0|        1.78|                        11687|
+|  2009| CHINA (MAINLAND)         |  2181895|     1645333|       268108|     44870|  223584|            0|        1.64|                         9650|
+|  2008| CHINA (MAINLAND)         |  2059741|     1563721|       264770|     40850|  190400|            0|        1.53|                         8941|
+|  2007| CHINA (MAINLAND)         |  1917316|     1443751|       253098|     35348|  185119|            0|        1.44|                         9154|
+|  2006| CHINA (MAINLAND)         |  1780554|     1338803|       245233|     28317|  168201|            0|        1.35|                         8267|
+|  2005| CHINA (MAINLAND)         |  1608115|     1207530|       232034|     23187|  145364|            0|        1.23|                         7102|
+|  2005| UNITED STATES OF AMERICA |  1578873|      579104|       667143|    317152|   13723|         1751|        5.25|                        41091|
+|  2007| UNITED STATES OF AMERICA |  1578683|      575692|       648278|    339433|   13172|         2109|        5.13|                        45630|
+|  2004| UNITED STATES OF AMERICA |  1569696|      573935|       662168|    318710|   13466|         1417|        5.26|                        38293|
+|  2006| UNITED STATES OF AMERICA |  1553664|      571099|       653101|    313999|   13561|         1903|        5.12|                        42954|
+|  2000| UNITED STATES OF AMERICA |  1552682|      564757|       632129|    342282|   12173|         1341|        5.42|                        40072|
+|  2003| UNITED STATES OF AMERICA |  1547778|      560926|       648067|    324514|   12829|         1442|        5.24|                        33335|
+|  2002| UNITED STATES OF AMERICA |  1538399|      561866|       628411|    334252|   12412|         1458|        5.26|                        37633|
+|  2008| UNITED STATES OF AMERICA |  1530982|      566810|       611445|    338359|   11915|         2453|        4.93|                        41815|
+|  2001| UNITED STATES OF AMERICA |  1525987|      555810|       634801|    321651|   12301|         1425|        5.27|                        30972|
+|  1999| UNITED STATES OF AMERICA |  1501137|      541784|       618335|    327459|   11938|         1621|        5.30|                        38142|
 
 ``` r
 top10alltime <- climate %>% 
@@ -68,22 +65,21 @@ top10alltime <- climate %>%
     ## Selecting by total
 
 ``` r
-top10alltime
+knitr::kable(top10alltime)
 ```
 
-    ## # A tibble: 10 x 2
-    ##    Country                       total
-    ##    <chr>                         <int>
-    ##  1 UNITED STATES OF AMERICA  102510260
-    ##  2 CHINA (MAINLAND)           47649834
-    ##  3 USSR                       30790355
-    ##  4 UNITED KINGDOM             20500813
-    ##  5 JAPAN                      14585037
-    ##  6 GERMANY                    12764185
-    ##  7 INDIA                      11385351
-    ##  8 RUSSIAN FEDERATION         10466421
-    ##  9 FRANCE (INCLUDING MONACO)   9697149
-    ## 10 CANADA                      8038299
+| Country                   |      total|
+|:--------------------------|----------:|
+| UNITED STATES OF AMERICA  |  102510260|
+| CHINA (MAINLAND)          |   47649834|
+| USSR                      |   30790355|
+| UNITED KINGDOM            |   20500813|
+| JAPAN                     |   14585037|
+| GERMANY                   |   12764185|
+| INDIA                     |   11385351|
+| RUSSIAN FEDERATION        |   10466421|
+| FRANCE (INCLUDING MONACO) |    9697149|
+| CANADA                    |    8038299|
 
 ``` r
 climate %>% 

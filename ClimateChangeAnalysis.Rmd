@@ -29,17 +29,17 @@ climate<-read_csv("https://pkgstore.datahub.io/core/co2-fossil-by-nation/fossil-
 
 # Inspecting the top pollutors, per year and all time.
 Some basic aggregation validates the received wisdom that the US has historically been the biggest contributor to global warming, but that China is now a bigger issue.
-```{r}
+```{r, results='asis'}
 
-climate %>% top_n(20, Total) %>% arrange(desc(Total))
+knitr::kable(climate %>% top_n(20, Total) %>% arrange(desc(Total)))
 
 top10alltime <- climate %>% 
          group_by(Country) %>%
          summarise(total = sum(Total)) %>%
          arrange(desc(total)) %>% 
-         top_n(10)
+         top_n(10, total)
 
-top10alltime
+knitr::kable(top10alltime)
 
 ```
 
